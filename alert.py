@@ -5,9 +5,9 @@ import logging
 def send_sms(to_number, message_text="Alert: Security notification", user_name="User"):
     """Send SMS alert with proper error handling"""
     try:
-        account_sid = "AC5799660bd56e611162534aa85dd1736c"
-        auth_token = "d6a2caabb69a0289ab5e9fe98badc4b8"
-        twilio_phone = "+917676049954"
+        account_sid = ""
+        auth_token = ""
+        twilio_phone = "+"
 
         # Validate phone numbers
         if not to_number or not to_number.startswith('+'):
