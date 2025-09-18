@@ -1,0 +1,3 @@
+2025-09-18 16:00:56,064 - __main__ - ERROR - Missing required packages: cryptography, twilio, gtts, psutil
+2025-09-18 16:00:56,064 - __main__ - INFO - Please install missing packages using:
+2025-09-18 16:00:56,064 - __main__ - INFO - pip install cryptography twilio gtts psutil

@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Money - Rural Banking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            margin-right: 15px;
+            cursor: pointer;
+            padding: 5px;
+            text-decoration: none;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            min-height: calc(100vh - 70px);
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            background: white;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e1e5e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+            font-weight: 600;
+            color: #666;
+            position: relative;
+        }
+
+        .step.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .step.completed {
+            background: #28a745;
+            color: white;
+        }
+
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 2px;
+            background: #e1e5e9;
+        }
+
+        .step.completed:not(:last-child)::after {
+            background: #28a745;
+        }
+
+        .form-container {
+            padding: 30px 20px;
+        }
+
+        /* Step 1: Amount Entry */
+        .amount-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .amount-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .amount-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .currency-symbol {
+            font-size: 48px;
+            color: #667eea;
+            margin-right: 5px;
+        }
+
+        .amount-input {
+            font-size: 48px;
+            font-weight: bold;
+            color: #333;
+            border: none;
+            text-align: center;
+            width: 200px;
+            background: transparent;
+            outline: none;
+        }
+
+        .balance-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .balance-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .balance-amount {
+            font-size: 18px;
+            font-weight: 600;
+            color: #28a745;
+        }
+
+        .quick-amounts {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .quick-amount {
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            font-weight: 500;
+        }
+
+        .quick-amount:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .quick-amount.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        /* Step 2: Recipient Details */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* Step 3: PIN Entry */
+        .pin-section {
+            text-align: center;
+        }
+
+        .pin-input {
+            font-size: 24px;
+            text-align: center;
+            letter-spacing: 10px;
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+        }
+
+        .transaction-summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 5px 0;
+        }
+
+        .summary-row.total {
+            border-top: 1px solid #dee2e6;
+            padding-top: 10px;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .next-btn, .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin-top: 20px;
+        }
+
+        .next-btn:hover, .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .next-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .messages {
+            margin: 20px 0;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .banking-features {
+            margin: 20px 0;
+        }
+
+        .feature-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: #ccc;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: #667eea;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(26px);
+        }
+
+        @media (max-width: 480px) {
+            .amount-input {
+                font-size: 36px;
+                width: 150px;
+            }
+            
+            .currency-symbol {
+                font-size: 36px;
+            }
+            
+            .form-container {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-header">
+        <a href="/" class="back-btn">←</a>
+        <div class="header-title">Send Money</div>
+    </div>
+
+    <div class="container">
+        <div class="step-indicator">
+            <div class="step active" id="step1">1</div>
+            <div class="step" id="step2">2</div>
+            <div class="step" id="step3">3</div>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="messages">
+              {% for category, message in messages %}
+                <div class="message {{ category }}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST" id="transactionForm">
+            <div class="form-container">
+                <!-- Step 1: Amount Entry -->
+                <div id="amountStep" class="step-content">
+                    <div class="amount-section">
+                        <div class="amount-label">Enter Amount</div>
+                        <div class="amount-display">
+                            <span class="currency-symbol">₹</span>
+                            <input type="number" 
+                                   class="amount-input" 
+                                   name="amount" 
+                                   id="amountInput"
+                                   placeholder="0"
+                                   min="1"
+                                   max="500000"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="balance-info">
+                        <div class="balance-label">Available Balance</div>
+                        <div class="balance-amount">₹{{ "{:,.2f}".format(balance) if balance else "0.00" }}</div>
+                    </div>
+
+                    <div class="quick-amounts">
+                        <div class="quick-amount" data-amount="500">₹500</div>
+                        <div class="quick-amount" data-amount="1000">₹1,000</div>
+                        <div class="quick-amount" data-amount="2000">₹2,000</div>
+                        <div class="quick-amount" data-amount="5000">₹5,000</div>
+                        <div class="quick-amount" data-amount="10000">₹10,000</div>
+                        <div class="quick-amount" data-amount="25000">₹25,000</div>
+                    </div>
+
+                    <button type="button" class="next-btn" id="nextToRecipient" disabled>
+                        Next
+                    </button>
+                </div>
+
+                <!-- Step 2: Recipient & Features -->
+                <div id="recipientStep" class="step-content hidden">
+                    <div class="form-group">
+                        <label for="recipient">Recipient Details</label>
+                        <input type="text" 
+                               name="recipient" 
+                               id="recipient"
+                               placeholder="Enter recipient name or phone"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description (Optional)</label>
+                        <input type="text" 
+                               name="description" 
+                               id="description"
+                               placeholder="What's this for?">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="language">Language</label>
+                        <select name="language" id="language">
+                            <option value="en">English</option>
+                            <option value="hi">Hindi</option>
+                            <option value="ta">Tamil</option>
+                            <option value="te">Telugu</option>
+                        </select>
+                    </div>
+
+                    <div class="banking-features">
+                        <div class="feature-toggle">
+                            <div>
+                                <strong>Offline Mode</strong>
+                                <div style="font-size: 12px; color: #666;">Process without internet</div>
+                            </div>
+                            <div class="toggle-switch" id="offlineToggle"></div>
+                        </div>
+                        
+                        <div class="feature-toggle">
+                            <div>
+                                <strong>SMS Alerts</strong>
+                                <div style="font-size: 12px; color: #666;">Get transaction notifications</div>
+                            </div>
+                            <div class="toggle-switch active" id="smsToggle"></div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="next-btn" id="nextToPin">
+                        Continue to Payment
+                    </button>
+                </div>
+
+                <!-- Step 3: PIN & Confirmation -->
+                <div id="pinStep" class="step-content hidden">
+                    <div class="transaction-summary">
+                        <div class="summary-row">
+                            <span>Amount:</span>
+                            <span id="summaryAmount">₹0</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>To:</span>
+                            <span id="summaryRecipient">-</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Description:</span>
+                            <span id="summaryDescription">-</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total:</span>
+                            <span id="summaryTotal">₹0</span>
+                        </div>
+                    </div>
+
+                    <div class="pin-section">
+                        <label for="pin">Enter your PIN to confirm</label>
+                        <input type="password" 
+                               class="pin-input" 
+                               name="pin" 
+                               id="pin"
+                               placeholder="••••"
+                               maxlength="6"
+                               required>
+                    </div>
+
+                    <input type="hidden" name="offline_mode" id="offlineModeInput" value="false">
+
+                    <button type="submit" class="submit-btn">
+                        🔒 Pay Securely
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Multi-step form logic
+        let currentStep = 1;
+        const totalSteps = 3;
+
+        // Quick amount selection
+        document.querySelectorAll('.quick-amount').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.quick-amount').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                document.getElementById('amountInput').value = this.dataset.amount;
+                validateAmount();
+            });
+        });
+
+        // Amount input validation
+        document.getElementById('amountInput').addEventListener('input', validateAmount);
+
+        function validateAmount() {
+            const amount = parseFloat(document.getElementById('amountInput').value) || 0;
+            const balance = {{ balance if balance else 0 }};
+            const nextBtn = document.getElementById('nextToRecipient');
+            
+            if (amount > 0 && amount <= balance && amount <= 500000) {
+                nextBtn.disabled = false;
+            } else {
+                nextBtn.disabled = true;
+            }
+        }
+
+        // Step navigation
+        document.getElementById('nextToRecipient').addEventListener('click', function() {
+            if (validateStep1()) {
+                goToStep(2);
+            }
+        });
+
+        document.getElementById('nextToPin').addEventListener('click', function() {
+            if (validateStep2()) {
+                updateSummary();
+                goToStep(3);
+            }
+        });
+
+        function validateStep1() {
+            const amount = parseFloat(document.getElementById('amountInput').value) || 0;
+            return amount > 0;
+        }
+
+        function validateStep2() {
+            const recipient = document.getElementById('recipient').value.trim();
+            return recipient.length > 0;
+        }
+
+        function goToStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.step-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Update step indicators
+            document.querySelectorAll('.step').forEach((stepEl, index) => {
+                stepEl.classList.remove('active', 'completed');
+                if (index + 1 < step) {
+                    stepEl.classList.add('completed');
+                } else if (index + 1 === step) {
+                    stepEl.classList.add('active');
+                }
+            });
+            
+            // Show current step
+            if (step === 1) {
+                document.getElementById('amountStep').classList.remove('hidden');
+            } else if (step === 2) {
+                document.getElementById('recipientStep').classList.remove('hidden');
+            } else if (step === 3) {
+                document.getElementById('pinStep').classList.remove('hidden');
+            }
+            
+            currentStep = step;
+        }
+
+        function updateSummary() {
+            const amount = document.getElementById('amountInput').value;
+            const recipient = document.getElementById('recipient').value;
+            const description = document.getElementById('description').value || 'No description';
+            
+            document.getElementById('summaryAmount').textContent = `₹${parseFloat(amount).toLocaleString()}`;
+            document.getElementById('summaryRecipient').textContent = recipient;
+            document.getElementById('summaryDescription').textContent = description;
+            document.getElementById('summaryTotal').textContent = `₹${parseFloat(amount).toLocaleString()}`;
+        }
+
+        // Toggle switches
+        document.querySelectorAll('.toggle-switch').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                
+                if (this.id === 'offlineToggle') {
+                    document.getElementById('offlineModeInput').value = this.classList.contains('active');
+                }
+            });
+        });
+
+        // Initialize
+        validateAmount();
+    </script>
+</body>
+</html>

@@ -1,32 +1,153 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Setup PIN</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup PIN - Rural Banking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            color: #333;
+        }
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus, input[type="password"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            font-size: 20px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #219a52;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .alert {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .security-info {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        .security-info h4 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+        .security-info ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .security-info li {
+            margin-bottom: 5px;
+            color: #555;
+        }
+    </style>
 </head>
 <body>
-    <h2>Setup Your PIN</h2>
+    <div class="container">
+        <h2>🔐 Setup Your Secure PIN</h2>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <ul>
-          {% for category, message in messages %}
-            <li style="color: {% if category == 'success' %}green{% else %}red{% endif %};">
-              {{ message }}
-            </li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
+        <div class="security-info">
+            <h4>🛡️ Security Features</h4>
+            <ul>
+                <li>PIN encrypted with AES-256</li>
+                <li>Device fingerprinting enabled</li>
+                <li>Multi-factor authentication</li>
+                <li>Fraud detection active</li>
+            </ul>
+        </div>
 
-    <form method="POST">
-        <input type="password" name="pin" placeholder="Enter 4-digit PIN" required>
-        <br><br>
-        <input type="text" name="trusted_number" placeholder="Enter Trusted Companion Number (+91...)" required>
-        <br><br>
-        <button type="submit">Save PIN</button>
-    </form>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
 
-    <br>
-    <a href="{{ url_for('home') }}">Back to Home</a>
+        <form method="POST">
+            <div class="form-group">
+                <input type="text" name="user_number" placeholder="📱 Your Phone Number (+91...)" required>
+            </div>
+
+            <div class="form-group">
+                <input type="password" name="pin" placeholder="🔐 Enter 4-6 digit PIN" required minlength="4" maxlength="6">
+            </div>
+
+            <div class="form-group">
+                <input type="text" name="trusted_number" placeholder="👥 Trusted Contact Number (+91...)" required>
+            </div>
+
+            <button type="submit">🔒 Setup Secure PIN</button>
+        </form>
+
+        <a href="{{ url_for('home') }}" class="back-link">← Back to Home</a>
+    </div>
 </body>
 </html>

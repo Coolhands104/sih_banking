@@ -1,27 +1,201 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>SIH Authentication Home</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏦 Rural Banking - Secure & Simple</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.info {
+            background-color: #cce7ff;
+            color: #004085;
+            border: 1px solid #b3d7ff;
+        }
+
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .menu-btn {
+            display: block;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .menu-btn.secondary {
+            background: #6c757d;
+        }
+
+        .menu-btn.secondary:hover {
+            background: #5a6268;
+        }
+
+        .security-info {
+            margin-top: 30px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .security-badge {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 10px;
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .menu-btn {
+                padding: 16px;
+                font-size: 15px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h2>Welcome to SIH Authentication Demo</h2>
+    <div class="container">
+        <div class="header">
+            <h1>🏦 Rural Banking</h1>
+            <p>Secure • Simple • Accessible</p>
+        </div>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <ul>
-          {% for category, message in messages %}
-            <li style="color: {% if category == 'success' %}green{% elif category == 'danger' %}red{% else %}blue{% endif %};">
-              {{ message }}
-            </li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
+        <!-- Account Balance Display -->
+        <div style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 25px; border-radius: 15px; text-align: center; margin: 20px 0; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);">
+            <h2 style="margin: 0 0 10px 0;">💳 Account Balance</h2>
+            <div style="font-size: 2.5em; font-weight: bold; margin: 10px 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">₹{{ "{:,.2f}".format(balance) }}</div>
+            <p style="font-size: 0.9em; opacity: 0.9; margin: 5px 0;">Account: {{ account_number }}</p>
+            <p style="font-size: 1.1em; margin: 10px 0 0 0; opacity: 0.95;">Welcome, {{ user_id }}!</p>
+        </div>
 
-    <ul>
-        <li><a href="{{ url_for('setup_pin') }}">Setup PIN</a></li>
-        <li><a href="{{ url_for('transaction') }}">Make Transaction</a></li>
-        <li><a href="{{ url_for('logout') }}">Logout</a></li>
-    </ul>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="messages">
+              {% for category, message in messages %}
+                <div class="message {{ category }}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <div class="menu-buttons">
+            <a href="{{ url_for('setup_pin') }}" class="menu-btn">
+                🔐 Setup PIN
+            </a>
+            <a href="{{ url_for('transaction') }}" class="menu-btn">
+                💸 Send Money
+            </a>
+            <a href="{{ url_for('banking_features') }}" class="menu-btn">
+                🏦 Banking Services
+            </a>
+            <a href="{{ url_for('transaction_history') }}" class="menu-btn">
+                📊 Transaction History
+            </a>
+            <a href="/admin" class="menu-btn secondary">
+                🛡️ Security Dashboard
+            </a>
+            <a href="{{ url_for('logout') }}" class="menu-btn secondary">
+                🚪 Logout
+            </a>
+        </div>
+
+        <div class="security-info">
+            <div class="security-badge">🛡️ SECURE</div>
+            <div>Protected by advanced fraud detection and encryption</div>
+        </div>
+    </div>
 </body>
 </html>

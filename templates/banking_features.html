@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banking Services - Rural Banking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            margin-right: 15px;
+            cursor: pointer;
+            padding: 5px;
+            text-decoration: none;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            min-height: calc(100vh - 70px);
+            padding: 20px;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .balance-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .balance-amount {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .account-number {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .service-card {
+            background: white;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .service-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .service-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .service-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .service-desc {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .quick-actions {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .quick-transfer {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .transfer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .transfer-info {
+            flex: 1;
+        }
+
+        .transfer-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .transfer-number {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .transfer-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .recent-transactions {
+            margin-bottom: 25px;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-desc {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .transaction-date {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .transaction-amount.debit {
+            color: #dc3545;
+        }
+
+        .transaction-amount.credit {
+            color: #28a745;
+        }
+
+        .feature-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: #ccc;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: #667eea;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(26px);
+        }
+
+        .messages {
+            margin: 20px 0;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .service-card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-header">
+        <a href="/" class="back-btn">←</a>
+        <div class="header-title">Banking Services</div>
+    </div>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="messages">
+              {% for category, message in messages %}
+                <div class="message {{ category }}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <!-- Balance Card -->
+        <div class="balance-card">
+            <div class="balance-label">Available Balance</div>
+            <div class="balance-amount">₹{{ "{:,.2f}".format(balance) if balance else "0.00" }}</div>
+            <div class="account-number">Account: {{ account_number or "N/A" }}</div>
+        </div>
+
+        <!-- Banking Services -->
+        <div class="services-grid">
+            <a href="/transaction" class="service-card">
+                <span class="service-icon">💸</span>
+                <div class="service-title">Send Money</div>
+                <div class="service-desc">Transfer to anyone</div>
+            </a>
+
+            <a href="/transaction-history" class="service-card">
+                <span class="service-icon">📊</span>
+                <div class="service-title">Transaction History</div>
+                <div class="service-desc">View all transactions</div>
+            </a>
+
+            <a href="/recharge" class="service-card">
+                <span class="service-icon">📱</span>
+                <div class="service-title">Mobile Recharge</div>
+                <div class="service-desc">Top up your phone</div>
+            </a>
+
+            <a href="/bill-payment" class="service-card">
+                <span class="service-icon">💡</span>
+                <div class="service-title">Bill Payment</div>
+                <div class="service-desc">Pay utility bills</div>
+            </a>
+
+            <a href="/qr-scan" class="service-card">
+                <span class="service-icon">📷</span>
+                <div class="service-title">Scan & Pay</div>
+                <div class="service-desc">QR code payments</div>
+            </a>
+
+            <a href="/bank-transfer" class="service-card">
+                <span class="service-icon">🏦</span>
+                <div class="service-title">Bank Transfer</div>
+                <div class="service-desc">To other banks</div>
+            </a>
+        </div>
+
+        <!-- Quick Transfers -->
+        <div class="quick-actions">
+            <div class="section-title">Quick Transfers</div>
+            
+            <div class="quick-transfer">
+                <div class="transfer-row">
+                    <div class="transfer-info">
+                        <div class="transfer-name">Rajesh Kumar</div>
+                        <div class="transfer-number">+91 98765 43210</div>
+                    </div>
+                    <button class="transfer-btn" onclick="quickTransfer('Rajesh Kumar', '+91 98765 43210')">Send</button>
+                </div>
+            </div>
+
+            <div class="quick-transfer">
+                <div class="transfer-row">
+                    <div class="transfer-info">
+                        <div class="transfer-name">Priya Sharma</div>
+                        <div class="transfer-number">+91 87654 32109</div>
+                    </div>
+                    <button class="transfer-btn" onclick="quickTransfer('Priya Sharma', '+91 87654 32109')">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="recent-transactions">
+            <div class="section-title">Recent Transactions</div>
+            
+            {% if recent_transactions %}
+                {% for transaction in recent_transactions[:5] %}
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-desc">{{ transaction.description }}</div>
+                        <div class="transaction-date">{{ transaction.date }}</div>
+                    </div>
+                    <div class="transaction-amount {{ 'debit' if transaction.type == 'debit' else 'credit' }}">
+                        {{ '-' if transaction.type == 'debit' else '+' }}₹{{ "{:,.2f}".format(transaction.amount) }}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div style="text-align: center; color: #666; padding: 20px;">
+                    No recent transactions
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Settings -->
+        <div class="quick-actions">
+            <div class="section-title">Settings</div>
+            
+            <div class="feature-toggle">
+                <div>
+                    <strong>SMS Notifications</strong>
+                    <div style="font-size: 12px; color: #666;">Get transaction alerts</div>
+                </div>
+                <div class="toggle-switch active" id="smsToggle"></div>
+            </div>
+            
+            <div class="feature-toggle">
+                <div>
+                    <strong>Offline Mode</strong>
+                    <div style="font-size: 12px; color: #666;">Enable offline transactions</div>
+                </div>
+                <div class="toggle-switch" id="offlineToggle"></div>
+            </div>
+            
+            <div class="feature-toggle">
+                <div>
+                    <strong>Biometric Login</strong>
+                    <div style="font-size: 12px; color: #666;">Use fingerprint/face</div>
+                </div>
+                <div class="toggle-switch" id="biometricToggle"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function quickTransfer(name, number) {
+            // Redirect to transaction page with pre-filled recipient
+            const url = `/transaction?recipient=${encodeURIComponent(name)}&number=${encodeURIComponent(number)}`;
+            window.location.href = url;
+        }
+
+        // Toggle switches
+        document.querySelectorAll('.toggle-switch').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                
+                // Save preferences (you can implement this)
+                const setting = this.id;
+                const enabled = this.classList.contains('active');
+                console.log(`${setting}: ${enabled}`);
+                
+                // Show feedback
+                const message = enabled ? 'enabled' : 'disabled';
+                // You can add a toast notification here
+            });
+        });
+    </script>
+</body>
+</html>
