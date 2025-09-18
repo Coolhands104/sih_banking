@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SIH Authentication Home</title>
+</head>
+<body>
+    <h2>Welcome to SIH Authentication Demo</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+          {% for category, message in messages %}
+            <li style="color: {% if category == 'success' %}green{% elif category == 'danger' %}red{% else %}blue{% endif %};">
+              {{ message }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <ul>
+        <li><a href="{{ url_for('setup_pin') }}">Setup PIN</a></li>
+        <li><a href="{{ url_for('transaction') }}">Make Transaction</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+</body>
+</html>

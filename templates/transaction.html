@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Transaction</title>
+</head>
+<body>
+    <h2>Enter PIN and Amount to Approve Transaction</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+          {% for category, message in messages %}
+            <li style="color: {% if category == 'success' %}green{% else %}red{% endif %};">
+              {{ message }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <input type="password" name="pin" placeholder="Enter PIN" required>
+        <br><br>
+        <input type="text" name="amount" placeholder="Enter Amount" required>
+        <br><br>
+        <select name="language">
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+            <option value="ta">Tamil</option>
+            <option value="te">Telugu</option>
+        </select>
+        <br><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <br>
+    <a href="{{ url_for('home') }}">Back to Home</a>
+</body>
+</html>
